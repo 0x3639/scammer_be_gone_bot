@@ -6,10 +6,12 @@ import logging
 import sys
 from pathlib import Path
 
+from telegram.error import Conflict
 from telegram.ext import (
     Application,
     ChatMemberHandler,
     CommandHandler,
+    ContextTypes,
     MessageHandler,
     filters,
 )
@@ -23,6 +25,14 @@ from bot.jobs.periodic_scan import make_periodic_scan
 from bot.persistence.database import Database
 
 logger = logging.getLogger(__name__)
+
+
+async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle errors — suppress transient 409 conflicts, log others."""
+    if isinstance(context.error, Conflict):
+        logger.warning("Polling conflict (409) — transient, will retry automatically")
+        return
+    logger.error("Unhandled exception: %s", context.error, exc_info=context.error)
 
 
 async def post_init(application: Application) -> None:
@@ -94,6 +104,9 @@ def build_application(config: BotConfig) -> Application:
         )
     )
 
+    # Error handler
+    app.add_error_handler(error_handler)
+
     # --- Periodic scan job ---
     scan_cb = make_periodic_scan(config, engine, db, alerter)
     app.job_queue.run_repeating(
@@ -125,7 +138,7 @@ def main() -> None:
         logger.error("BOT_TOKEN not set in environment — check your .env file")
         sys.exit(1)
 
-    logger.info("Starting impersonator detection bot")
+    logger.info("Starting Scammer Be Gone bot")
     logger.info("Monitoring %d group(s)", len(config.groups))
 
     app = build_application(config)
