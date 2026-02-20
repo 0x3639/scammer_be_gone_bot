@@ -1,4 +1,4 @@
-# SugoiBTC Bot — Development Roadmap
+# Scammer Be Gone Bot — Development Roadmap
 
 ## Overview
 

@@ -1,4 +1,4 @@
-# Telegram Impersonator Detection Bot
+# Scammer Be Gone Bot
 
 A Telegram bot that detects and warns against impersonator accounts in real-time. Scammers create usernames that visually mimic trusted community members (e.g., `@sug0ibtc` to impersonate `@sugoibtc`) and copy display names exactly, then DM users to steal funds. This bot catches them.
 
