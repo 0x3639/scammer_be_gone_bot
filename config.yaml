@@ -1,0 +1,208 @@
+# Impersonator Detection Bot Configuration
+
+# Monitored groups — add your Telegram group chat IDs here
+monitored_groups:
+  - chat_id: -1001317474644
+    name: "Zenon Network"
+    admins:
+      # 13,838 messages
+      - user_id: 1545382774
+        username: "georgezgeorgez"
+        display_name: "George"
+      # 13,427 messages
+      - user_id: 50577900
+        username: "shazzamazzash"
+        display_name: "Shazz"
+      # 11,676 messages
+      - user_id: 503025265
+        username: "sugoibtc"
+        display_name: "Sugoi"
+      # 11,485 messages
+      - user_id: 1452441682
+        username: "ZeroX3639"
+        display_name: "Liv'n Rent Free"
+      # 11,300 messages
+      - user_id: 1052147838
+        username: "rexznn"
+        display_name: "Rex"
+      # 9,790 messages
+      - user_id: 546004991
+        username: "Chainemane"
+        display_name: "IVI"
+      # 7,510 messages
+      - user_id: 706651283
+        username: "coinselor"
+        display_name: "Brat"
+      # 6,584 messages
+      - user_id: 1479190436
+        username: "Stark_of_Zenon"
+        display_name: "Stark"
+      # 5,045 messages
+      - user_id: 453611653
+        username: "trgnbn"
+        display_name: "h"
+      # 4,740 messages
+      - user_id: 375285500
+        username: "Phuongng83"
+        display_name: "Phuong Dollar"
+      # 4,385 messages
+      - user_id: 464506801
+        username: "BamBam1133"
+        display_name: "- hbar maxi"
+      # 3,616 messages
+      - user_id: 1670860892
+        username: "itsDyddy"
+        display_name: "Dyddy"
+      # 3,313 messages
+      - user_id: 671564054
+        username: "Rainbowginger"
+        display_name: "blue ginger"
+      # 2,759 messages
+      - user_id: 433599934
+        username: "mehowbrainz"
+        display_name: "mehowz"
+      # 2,679 messages
+      - user_id: 340314064
+        username: "shaimo1000"
+        display_name: "Shai"
+      # 2,421 messages
+      - user_id: 837813994
+        username: "Tleahy"
+        display_name: "Trevor_Zed"
+      # 2,394 messages
+      - user_id: 828396153
+        username: "SultanOfStaking"
+        display_name: "SultanOfStaking"
+      # 2,376 messages
+      - user_id: 516164442
+        username: "nulltrac"
+        display_name: "s"
+      # 2,359 messages
+      - user_id: 331460545
+        username: "Layiid"
+        display_name: "Layiid"
+      # 2,143 messages
+      - user_id: 181513620
+        username: "cars4ever"
+        display_name: "Scirockoe"
+      # 2,060 messages
+      - user_id: 499852593
+        username: "Kemalitto"
+        display_name: "Kemal"
+      # 1,992 messages
+      - user_id: 482795147
+        username: "stillequalsmovin"
+        display_name: "still_movin"
+      # 1,965 messages
+      - user_id: 358200237
+        username: "chief_riverboat"
+        display_name: "Chief Riverboat"
+      # 1,875 messages
+      - user_id: 419345
+        username: "doruq"
+        display_name: "doruk"
+      # 1,860 messages
+      - user_id: 1126457773
+        username: "vibeznn"
+        display_name: "V"
+      # 1,684 messages
+      - user_id: 1951575611
+        username: "Thbtc1012"
+        display_name: "Thanos"
+      # 1,631 messages
+      - user_id: 1314056199
+        username: "Paesch"
+        display_name: "Paesch"
+      # 1,538 messages
+      - user_id: 1897036723
+        username: "rugmehardermrkaine"
+        display_name: "Ms Kaitlyn"
+      # 1,499 messages
+      - user_id: 1072362561
+        username: "mrheiznnberg"
+        display_name: "Mr. HeiZNNberg"
+      # 1,496 messages
+      - user_id: 1468463436
+        username: "zashounet"
+        display_name: "Zashounet"
+      # 1,483 messages
+      - user_id: 5064893345
+        username: "zyler9985"
+        display_name: "Zyler"
+      # 1,444 messages
+      - user_id: 1659412324
+        username: "frankthomas1billion"
+        display_name: "BigFrank"
+      # 1,422 messages
+      - user_id: 1631212176
+        username: "znnsol"
+        display_name: "sol"
+      # 1,398 messages
+      - user_id: 1745465184
+        username: "Jer0n"
+        display_name: "Jeron"
+      # 1,394 messages
+      - user_id: 894369208
+        username: "Muzzo82"
+        display_name: "Muzzo"
+      # 1,343 messages
+      - user_id: 6231249156
+        username: "ZNNBANYAMA"
+        display_name: "ZNNBANYAMA"
+      # 1,338 messages
+      - user_id: 895059193
+        username: "stanonstan"
+        display_name: "Stan"
+      # 1,281 messages
+      - user_id: 1528596828
+        username: "Byzentined"
+        display_name: "Byzentined"
+      # 1,237 messages
+      - user_id: 1017513336
+        username: "dumeril"
+        display_name: "Dumeril"
+      # 1,205 messages
+      - user_id: 2142973697
+        username: "Romeotheonly"
+        display_name: "romeo"
+      # 1,175 messages
+      - user_id: 1647303411
+        username: "Zinnlos"
+        display_name: "zinnlos"
+      # 1,113 messages
+      - user_id: 481743179
+        username: "TheAliensKnow"
+        display_name: "AlienCapital"
+      # 1,098 messages
+      - user_id: 2045339234
+        username: "Hairo786"
+        display_name: "Hairo"
+      # 1,013 messages
+      - user_id: 786175560
+        username: "ElRegel"
+        display_name: "Biscuit Oliva"
+
+# Detection thresholds
+detection:
+  canonical_threshold: 1.0       # Exact canonical match
+  homoglyph_threshold: 0.85      # Confusable character match
+  fuzzy_levenshtein_threshold: 0.80
+  fuzzy_jaro_winkler_threshold: 0.85
+  fuzzy_partial_ratio_threshold: 0.90
+  display_name_threshold: 0.95
+  composite_threshold: 0.75      # Overall composite score
+
+  # Composite score weights
+  weights:
+    canonical: 0.35
+    homoglyph: 0.30
+    fuzzy: 0.25
+    display_name: 0.10
+
+# Alert settings
+alerts:
+  cooldown_seconds: 3600         # 1 hour per user per group
+  send_delay_seconds: 2          # Delay between alert sends
+
+# Periodic scan interval (seconds)
+periodic_scan_interval: 300      # 5 minutes
