@@ -15,6 +15,7 @@ class ObservedMember:
     last_name: str | None
     last_seen: datetime
     bio: str | None = None
+    channel_title: str | None = None
 
     @property
     def display_name(self) -> str:

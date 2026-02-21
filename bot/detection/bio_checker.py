@@ -16,6 +16,7 @@ DEFAULT_BLACKLIST_PATH = Path("bio_blacklist.json")
 class BioCheckResult:
     matched: bool
     matched_term: str | None
+    matched_field: str | None
     bio_text: str | None
 
 
@@ -49,13 +50,20 @@ class BioChecker:
     def term_count(self) -> int:
         return len(self._terms)
 
-    def check_bio(self, bio: str | None) -> BioCheckResult:
-        if not bio or not self._terms:
-            return BioCheckResult(matched=False, matched_term=None, bio_text=bio)
+    def check_bio(
+        self, bio: str | None, channel_title: str | None = None
+    ) -> BioCheckResult:
+        if not self._terms:
+            return BioCheckResult(matched=False, matched_term=None, matched_field=None, bio_text=bio)
 
-        bio_lower = bio.lower()
-        for term in self._terms:
-            if term in bio_lower:
-                return BioCheckResult(matched=True, matched_term=term, bio_text=bio)
+        for text, field in ((bio, "bio"), (channel_title, "channel_title")):
+            if not text:
+                continue
+            text_lower = text.lower()
+            for term in self._terms:
+                if term in text_lower:
+                    return BioCheckResult(
+                        matched=True, matched_term=term, matched_field=field, bio_text=bio,
+                    )
 
-        return BioCheckResult(matched=False, matched_term=None, bio_text=bio)
+        return BioCheckResult(matched=False, matched_term=None, matched_field=None, bio_text=bio)

@@ -28,6 +28,7 @@ class TestBioChecker:
         result = checker.check_bio("18+")
         assert result.matched is True
         assert result.matched_term == "18+"
+        assert result.matched_field == "bio"
 
     def test_match_substring(self, checker: BioChecker) -> None:
         result = checker.check_bio("hey check my 18+ content")
@@ -48,6 +49,7 @@ class TestBioChecker:
         result = checker.check_bio("Just a normal person")
         assert result.matched is False
         assert result.matched_term is None
+        assert result.matched_field is None
 
     def test_none_bio(self, checker: BioChecker) -> None:
         result = checker.check_bio(None)
@@ -66,6 +68,39 @@ class TestBioChecker:
 
     def test_term_count(self, checker: BioChecker) -> None:
         assert checker.term_count == 3
+
+
+class TestChannelTitle:
+    def test_match_channel_title(self, checker: BioChecker) -> None:
+        result = checker.check_bio(None, channel_title="18+ Secret Place")
+        assert result.matched is True
+        assert result.matched_term == "18+"
+        assert result.matched_field == "channel_title"
+
+    def test_match_channel_title_case_insensitive(self, checker: BioChecker) -> None:
+        result = checker.check_bio(None, channel_title="ONLY FANS Premium")
+        assert result.matched is True
+        assert result.matched_term == "only fans"
+        assert result.matched_field == "channel_title"
+
+    def test_bio_checked_before_channel(self, checker: BioChecker) -> None:
+        result = checker.check_bio("18+ in bio", channel_title="18+ in channel")
+        assert result.matched is True
+        assert result.matched_field == "bio"
+
+    def test_channel_checked_when_bio_clean(self, checker: BioChecker) -> None:
+        result = checker.check_bio("clean bio", channel_title="crypto pump signals")
+        assert result.matched is True
+        assert result.matched_field == "channel_title"
+        assert result.matched_term == "crypto pump"
+
+    def test_no_match_both_clean(self, checker: BioChecker) -> None:
+        result = checker.check_bio("clean bio", channel_title="My Cooking Channel")
+        assert result.matched is False
+
+    def test_none_channel_title(self, checker: BioChecker) -> None:
+        result = checker.check_bio(None, channel_title=None)
+        assert result.matched is False
 
 
 class TestBioCheckerNoTerms:

@@ -75,22 +75,27 @@ def make_member_handler(
             if await db.is_whitelisted(user.id, chat_id):
                 return
 
-            # Bio blacklist check
+            # Bio / channel title blacklist check
             try:
                 chat_info = await context.bot.get_chat(user.id)
                 bio = chat_info.bio
+                channel_title = getattr(chat_info, "personal_chat", None)
+                channel_title = channel_title.title if channel_title else None
             except Exception:
                 bio = None
+                channel_title = None
             member.bio = bio
+            member.channel_title = channel_title
             await db.upsert_member(member)
-            bio_result = bio_checker.check_bio(bio)
+            bio_result = bio_checker.check_bio(bio, channel_title)
             if bio_result.matched:
                 logger.warning(
-                    "Bio blacklist match for user %d (@%s) joining chat %d — term %r found in bio",
+                    "Blacklist match for user %d (@%s) joining chat %d — term %r found in %s",
                     user.id,
                     user.username,
                     chat_id,
                     bio_result.matched_term,
+                    bio_result.matched_field,
                 )
                 try:
                     await context.bot.ban_chat_member(chat_id, user.id)

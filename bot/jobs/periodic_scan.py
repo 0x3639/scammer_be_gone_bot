@@ -53,15 +53,16 @@ def make_periodic_scan(
 
                 total_checked += 1
 
-                # Bio blacklist check using cached bio
-                bio_result = bio_checker.check_bio(member.bio)
+                # Bio / channel title blacklist check using cached data
+                bio_result = bio_checker.check_bio(member.bio, member.channel_title)
                 if bio_result.matched:
                     total_flagged += 1
                     logger.warning(
-                        "Bio blacklist match for user %d (@%s) in periodic scan — term %r",
+                        "Blacklist match for user %d (@%s) in periodic scan — term %r in %s",
                         member.user_id,
                         member.username,
                         bio_result.matched_term,
+                        bio_result.matched_field,
                     )
                     try:
                         await context.bot.ban_chat_member(group.chat_id, member.user_id)
