@@ -12,6 +12,7 @@ from telegram.ext import ContextTypes
 
 from bot.alerts.alerter import Alerter
 from bot.config import BotConfig
+from bot.detection.bio_checker import BioChecker
 from bot.detection.engine import AlertLevel, SimilarityEngine
 from bot.persistence.database import Database
 
@@ -23,6 +24,7 @@ def make_periodic_scan(
     engine: SimilarityEngine,
     db: Database,
     alerter: Alerter,
+    bio_checker: BioChecker,
 ):
     """Create the periodic scan callback."""
 
@@ -50,6 +52,23 @@ def make_periodic_scan(
                     continue
 
                 total_checked += 1
+
+                # Bio blacklist check using cached bio
+                bio_result = bio_checker.check_bio(member.bio)
+                if bio_result.matched:
+                    total_flagged += 1
+                    logger.warning(
+                        "Bio blacklist match for user %d (@%s) in periodic scan — term %r",
+                        member.user_id,
+                        member.username,
+                        bio_result.matched_term,
+                    )
+                    try:
+                        await context.bot.ban_chat_member(group.chat_id, member.user_id)
+                    except Exception as exc:
+                        logger.error("Failed to ban user %d: %s", member.user_id, exc)
+                    continue
+
                 display_name = member.display_name
 
                 result = engine.check_user(

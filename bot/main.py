@@ -18,6 +18,7 @@ from telegram.ext import (
 
 from bot.alerts.alerter import Alerter
 from bot.config import BotConfig, load_config
+from bot.detection.bio_checker import BioChecker
 from bot.detection.engine import SimilarityEngine
 from bot.handlers.member_handler import make_member_handler
 from bot.handlers.message_handler import make_message_handler
@@ -54,6 +55,7 @@ def build_application(config: BotConfig) -> Application:
     # Core components
     db = Database()
     engine = SimilarityEngine(config.detection)
+    bio_checker = BioChecker()
 
     # Build the application
     app = (
@@ -91,11 +93,11 @@ def build_application(config: BotConfig) -> Application:
     app.add_handler(CommandHandler("check", check_command))
 
     # Chat member updates (join/leave)
-    member_cb = make_member_handler(config, engine, db, alerter)
+    member_cb = make_member_handler(config, engine, db, alerter, bio_checker)
     app.add_handler(ChatMemberHandler(member_cb, ChatMemberHandler.CHAT_MEMBER))
 
     # Message handler — process all non-command text messages in groups
-    message_cb = make_message_handler(config, engine, db, alerter)
+    message_cb = make_message_handler(config, engine, db, alerter, bio_checker)
     monitored_chat_ids = [g.chat_id for g in config.groups]
     app.add_handler(
         MessageHandler(
@@ -108,7 +110,7 @@ def build_application(config: BotConfig) -> Application:
     app.add_error_handler(error_handler)
 
     # --- Periodic scan job ---
-    scan_cb = make_periodic_scan(config, engine, db, alerter)
+    scan_cb = make_periodic_scan(config, engine, db, alerter, bio_checker)
     app.job_queue.run_repeating(
         scan_cb,
         interval=config.periodic_scan_interval,

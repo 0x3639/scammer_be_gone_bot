@@ -16,6 +16,7 @@ from telegram.ext import ContextTypes
 
 from bot.alerts.alerter import Alerter
 from bot.config import BotConfig
+from bot.detection.bio_checker import BioChecker
 from bot.detection.engine import AlertLevel, SimilarityEngine
 from bot.persistence.database import Database
 from bot.persistence.models import ObservedMember
@@ -28,6 +29,7 @@ def make_message_handler(
     engine: SimilarityEngine,
     db: Database,
     alerter: Alerter,
+    bio_checker: BioChecker,
 ):
     """Create the message handler callback with injected dependencies."""
 
@@ -63,6 +65,34 @@ def make_message_handler(
 
         # Skip if whitelisted
         if await db.is_whitelisted(user.id, chat_id):
+            return
+
+        # Bio blacklist check
+        try:
+            chat_info = await context.bot.get_chat(user.id)
+            bio = chat_info.bio
+        except Exception:
+            bio = None
+        # Cache bio in DB
+        member.bio = bio
+        await db.upsert_member(member)
+        bio_result = bio_checker.check_bio(bio)
+        if bio_result.matched:
+            logger.warning(
+                "Bio blacklist match for user %d (@%s) in chat %d — term %r found in bio",
+                user.id,
+                user.username,
+                chat_id,
+                bio_result.matched_term,
+            )
+            try:
+                await context.bot.ban_chat_member(chat_id, user.id)
+            except Exception as exc:
+                logger.error("Failed to ban user %d: %s", user.id, exc)
+            try:
+                await message.delete()
+            except Exception as exc:
+                logger.error("Failed to delete message from user %d: %s", user.id, exc)
             return
 
         # Run detection

@@ -14,6 +14,7 @@ class ObservedMember:
     first_name: str | None
     last_name: str | None
     last_seen: datetime
+    bio: str | None = None
 
     @property
     def display_name(self) -> str:

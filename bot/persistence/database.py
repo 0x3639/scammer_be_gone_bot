@@ -56,6 +56,12 @@ class Database:
         self._conn = await aiosqlite.connect(self._db_path)
         await self._conn.executescript(SCHEMA)
         await self._conn.commit()
+        # Migrate: add bio column if it doesn't exist
+        try:
+            await self._conn.execute("ALTER TABLE observed_members ADD COLUMN bio TEXT")
+            await self._conn.commit()
+        except aiosqlite.OperationalError:
+            pass  # Column already exists
 
     async def close(self) -> None:
         if self._conn:
@@ -73,13 +79,14 @@ class Database:
     async def upsert_member(self, member: ObservedMember) -> None:
         await self.conn.execute(
             """
-            INSERT INTO observed_members (user_id, chat_id, username, first_name, last_name, last_seen)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO observed_members (user_id, chat_id, username, first_name, last_name, last_seen, bio)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (user_id, chat_id) DO UPDATE SET
                 username = excluded.username,
                 first_name = excluded.first_name,
                 last_name = excluded.last_name,
-                last_seen = excluded.last_seen
+                last_seen = excluded.last_seen,
+                bio = COALESCE(excluded.bio, observed_members.bio)
             """,
             (
                 member.user_id,
@@ -88,13 +95,14 @@ class Database:
                 member.first_name,
                 member.last_name,
                 member.last_seen.isoformat(),
+                member.bio,
             ),
         )
         await self.conn.commit()
 
     async def get_members_by_chat(self, chat_id: int) -> list[ObservedMember]:
         cursor = await self.conn.execute(
-            "SELECT user_id, chat_id, username, first_name, last_name, last_seen "
+            "SELECT user_id, chat_id, username, first_name, last_name, last_seen, bio "
             "FROM observed_members WHERE chat_id = ?",
             (chat_id,),
         )
@@ -107,6 +115,7 @@ class Database:
                 first_name=r[3],
                 last_name=r[4],
                 last_seen=datetime.fromisoformat(r[5]),
+                bio=r[6],
             )
             for r in rows
         ]
